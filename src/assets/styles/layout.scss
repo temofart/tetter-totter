@@ -1,0 +1,54 @@
+body {
+  background: rgb(255, 247, 226);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.game-layout {
+  display: block;
+  height: 100vh;
+  min-height: 800px;
+  .title {
+    display: block;
+    font-size: 30px;
+    padding: 40px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .window {
+    position: relative;
+    height: 600px;
+    margin: 0 auto;
+    box-shadow: 0 0 20px 10px #e6e2cd;
+    background: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+
+    &-footer {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    .base {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: rgb(82, 34, 2);
+    }
+  }
+}
+
+.icon-play {
+  width: 80px;
+  height: 80px;
+  margin: 20px;
+  cursor: pointer;
+}
