@@ -1,5 +1,5 @@
 const state = {
-  isPlaying: false,
+  isPlaying: false
 }
 
 const getters = {
@@ -24,7 +24,6 @@ const actions = {
   },
   makeGameOver({state}) {
     state.isPlaying = false
-    alert('you loose')
   }
 }
 

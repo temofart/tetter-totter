@@ -17,9 +17,17 @@ export default {
     }
   },
   methods: {
+    setF2d2(rightPos) {
+      let position = rightPos
+      position = position.replace('right: ', '')
+      position = position.replace('px;', '')
+      const distance = 500 - parseInt(position)
+      this.$store.commit('calculations/setRightF2d2', {m2: this.weight, d2: distance})
+    },
     rightBoxParams() {
       const position = this.rightPosition()
       const weight = this.rightWeight()
+      this.setF2d2(position)
       return position + weight
     },
     rightPosition() {
@@ -28,7 +36,7 @@ export default {
     rightWeight() {
       this.weight = this.rand(this.maxWeight, this.minWeight)
       this.$store.commit('calculations/setBoxWeight', this.weight)
-      return `width: ${this.size}0px; height: ${this.weight}0px;`
+      return `width: ${this.weight}0px; height: ${this.weight}0px;`
     },
     rand(max, min) {
       return Math.floor(Math.random() * (max - min + 1)) + min;

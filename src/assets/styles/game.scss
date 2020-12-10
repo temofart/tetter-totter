@@ -4,7 +4,7 @@
   width: 1000px;
   height: $board-height;
   background: rgb(129, 73, 0);
-  transition: transform .5s ease;
+  transition: transform 5s linear;
 
   .weight {
     width: 60px;
@@ -30,9 +30,15 @@
   display: flex;
   figure {
     position: absolute;
-    transform: translateY(-800px);
+    transform: translateY(-500px);
     bottom: 16px;
-    transition: transform 3s linear;
+    transition: transform 5s linear;
+    opacity: 0;
+    box-shadow: 0 0 black black;
+
+    &.active {
+      opacity: 1;
+    }
 
     &::after {
       content: attr(data-weight);
@@ -54,8 +60,9 @@
       border-bottom: 50px solid rgb(4, 187, 80);
 
       &::after {
-        top: 100%;
+        top: auto;
         transform: translateX(-50%);
+        color: #000;
       }
     }
 
