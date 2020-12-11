@@ -9,13 +9,14 @@
   .weight {
     width: 60px;
     height: 80px;
-    background: gray;
+    background: transparent;
     position: absolute;
     right: 20px;
     bottom: $board-height;
+    border: 2px solid green;
 
     &::after {
-      content: attr(data-size);
+      content: attr(data-weight);
       position: absolute;
       left: 50%;
       top: 50%;
@@ -26,13 +27,14 @@
   }
 }
 
-.left-side {
+.left-side,
+.right-side {
   display: flex;
   figure {
     position: absolute;
     transform: translateY(-500px);
     bottom: 16px;
-    transition: transform 5s linear;
+    transition: transform 4s linear;
     opacity: 0;
     box-shadow: 0 0 black black;
 

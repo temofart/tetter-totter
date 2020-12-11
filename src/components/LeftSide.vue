@@ -96,14 +96,16 @@ export default {
       else return 'triangle'
     },
     moveLeft(item) {
-      const x = window.getComputedStyle(item).getPropertyValue('margin-left')
+      const x = window.getComputedStyle(item).getPropertyValue('left')
       const distance = x.replace('px', '')
-      item.style.marginLeft = distance - 10 + 'px'
+      if (distance <= -20) return
+      item.style.left = distance - 10 + 'px'
     },
     moveRight(item) {
-      const x = window.getComputedStyle(item).getPropertyValue('margin-left')
+      const x = window.getComputedStyle(item).getPropertyValue('left')
       const distance = x.replace('px', '')
-      item.style.marginLeft = parseInt(distance) + 10 + 'px'
+      if (distance >= 400) return
+      item.style.left = parseInt(distance) + 10 + 'px'
     },
     startFalling() {
       if (this.currentIndex === this.maxItems || !this.isPlaying) return false
@@ -129,7 +131,9 @@ export default {
           const weight = parseInt(current.getAttribute('data-weight'))
           const position = parseInt(window.getComputedStyle(current).getPropertyValue('left').replace('px', '')) + weight * 10 / 2
           const distance = 500 - position
-          this.$store.dispatch('calculations/calculateLoosing', {m1: weight, d1: distance})
+          this.$store.commit('calculations/createRight')
+
+          this.$store.dispatch('calculations/calcLeftForce', {m1: weight, d1: distance})
           this.currentIndex = this.currentIndex + 1
           if (this.isPlaying) this.startFalling()
         })

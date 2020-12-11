@@ -1,6 +1,12 @@
 <template>
   <div class="right-side">
-    <div class="weight" :style="rightBoxParams()" :data-size="weight"></div>
+    <div
+      v-for="(item, index) in rightSideCount"
+      :data-weight="weights[index]"
+      :style="styles[index]"
+      :key="index"
+      class="weight"
+    />
   </div>
 </template>
 
@@ -13,16 +19,33 @@ export default {
       minRightPos: 0,
       maxWeight: 10,
       minWeight: 1,
-      weight: null
+      weights: [],
+      weight: null,
+      styles: []
+    }
+  },
+  computed: {
+    rightSideCount() {
+      return this.$store.getters["calculations/getRightCount"]
+    },
+  },
+  watch: {
+    rightSideCount() {
+      this.createNew()
     }
   },
   methods: {
+    createNew() {
+      const styles = this.rightBoxParams()
+      this.styles.push(styles)
+    },
     setF2d2(rightPos) {
       let position = rightPos
       position = position.replace('right: ', '')
       position = position.replace('px;', '')
       const distance = 500 - parseInt(position)
-      this.$store.commit('calculations/setRightF2d2', {m2: this.weight, d2: distance})
+      this.$store.dispatch('calculations/calcRightForce', {m2: this.weight, d2: distance})
+      this.$store.dispatch('calculations/calcTotalK')
     },
     rightBoxParams() {
       const position = this.rightPosition()
@@ -35,12 +58,16 @@ export default {
     },
     rightWeight() {
       this.weight = this.rand(this.maxWeight, this.minWeight)
+      this.weights.push(this.weight)
       this.$store.commit('calculations/setBoxWeight', this.weight)
       return `width: ${this.weight}0px; height: ${this.weight}0px;`
     },
     rand(max, min) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+  },
+  created() {
+    this.createNew()
   }
 }
 </script>

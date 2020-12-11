@@ -11,19 +11,7 @@ const getters = {
 const mutations = {
   SET_PLAY(state, value) {
     state.isPlaying = value
-    console.log(state.isPlaying)
-  }
-}
-
-const actions = {
-  startPlay(store) {
-
-  },
-  startFalling(store) {
-
-  },
-  makeGameOver({state}) {
-    state.isPlaying = false
+    console.log('play: ', state.isPlaying)
   }
 }
 
@@ -32,5 +20,4 @@ export default {
   state,
   getters,
   mutations,
-  actions
 }

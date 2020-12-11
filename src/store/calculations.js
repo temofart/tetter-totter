@@ -3,14 +3,13 @@ const state = {
   totalWeight: 0,
   currentBoxWeight: null,
   maxWeight: null,
-  loosePoint: -10,
-  isLoose: false,
-  forces: [],
-  rightSide: {
-    m2: 0,
-    d2: 0
-  },
-  angle: 0
+  loosePoint: 10,
+  left_forces: [],
+  right_forces: [],
+  rightCount: ['i'],
+  angle: 0,
+  totalForce_left: 0,
+  totalForce_right: 0
 }
 
 const getters = {
@@ -21,7 +20,17 @@ const getters = {
     return `transform: rotate(${state.angle}deg);`
   },
   isLoose(state) {
-    return state.isLoose
+    const condition = state.angle <= -state.loosePoint || state.angle >= state.loosePoint
+    return condition
+  },
+  getLeftForce(state) {
+    return state.totalForce_left
+  },
+  getRightForce(state) {
+    return state.totalForce_right
+  },
+  getRightCount(state) {
+    return state.rightCount
   }
 }
 
@@ -33,36 +42,49 @@ const mutations = {
   setBoxWeight(state, value) {
     state.currentBoxWeight = value
   },
-  setRightF2d2(state, {m2, d2}) {
-    state.rightSide.m2 = m2
-    state.rightSide.d2 = d2
-    console.log('set right', m2, d2)
+  newLeftForce(state, value) {
+    state.left_forces.push(value)
   },
-  newForce(state, value) {
-    state.forces.push(value)
+  newRightForce(state, value) {
+    state.right_forces.push(value)
   },
   setAngle(state, value) {
-    state.angle = value
+    isFinite(value) ? state.angle = value : 0
+    console.log('setangle', state.angle)
+  },
+  setInfoForce(state, {name, value}) {
+    if (name === 'left') state.totalForce_left = value
+    if (name === 'right') state.totalForce_right = value
+  },
+  createRight(state) {
+    state.rightCount.push('i')
   }
 }
 
 const actions = {
-  calculateLoosing({state, commit}, {m1, d1}) {
-    // F1* d1 = F2 * d2
+  // F1* d1 = F2 * d2
+
+  calcLeftForce({state, commit}, {m1, d1}) {
     const F1 = m1 * 9.8
-    const F2 = state.rightSide.m2 * 9.8
+    commit('newLeftForce', parseInt(F1 * d1))
 
-    commit('newForce', parseInt(F1 * d1))
-    console.log(state.forces)
-
-    const left = state.forces.reduce((acc, curr) => {
+    const leftF = state.left_forces.reduce((acc, curr) => {
       return acc + curr
     }, 0)
-    console.log('reduce', left)
-    const right = parseInt(F2 * state.rightSide.d2)
+    commit('setInfoForce', {name: 'left', value: leftF})
+  },
+  calcRightForce({state, commit}, {m2, d2}) {
+    const F2 = m2 * 9.8
+    commit('newRightForce', parseInt(F2 * d2))
 
-    console.log('leftForce: ', left, 'rightForce: ', right)
-
+    const rightF = state.right_forces.reduce((acc, curr) => {
+      return acc + curr
+    }, 0)
+    commit('setInfoForce', {name: 'right', value: rightF})
+  },
+  calcTotalK({state, commit}) {
+    const left = state.totalForce_left
+    const right = state.totalForce_right
     const k = left > right ? -(left / right) : right / left
     console.log('k ', k * 4)
     commit('setAngle', k * 4)
